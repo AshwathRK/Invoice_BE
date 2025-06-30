@@ -124,12 +124,11 @@ const handleGetSignUp = async (req, res, next) => {
 const handlePostSignUp = async (req, res, next) => {
     try {
         const {
-            fullname, email, phonenumber, password, confirmpassword,
-            securityQuestion, securityAnswer, dateofbirth,
+            fullname, email, phonenumber, password, confirmpassword, dateofbirth,
             gender, streetaddress, city, State, Postal, Country
         } = req.body;
 
-        const requiredFields = { fullname, email, password, confirmpassword, securityQuestion, securityAnswer };
+        const requiredFields = { fullname, email, password, confirmpassword };
         for (const [key, value] of Object.entries(requiredFields)) {
             if (!value) {
                 return res.status(400).json({
@@ -173,8 +172,6 @@ const handlePostSignUp = async (req, res, next) => {
             email: email.toLowerCase(),
             phonenumber,
             password: hashedPassword,
-            securityQuestion,
-            securityAnswer,
             dateofbirth: dateofbirth ? new Date(dateofbirth) : null,
             gender: gender || '',
             streetaddress: streetaddress || '',

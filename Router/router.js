@@ -16,6 +16,10 @@ const {
   sendResetOtp
 } = require('../Controller/passwordupdate');
 
+const {
+    handleAllTheInvoiceData, handleCreateInvoice, handleUpdateInvoice, handleDeleteInvoice
+} = require('../Controller/invoice')
+
 const router = express.Router();
 
 // Authentication routes
@@ -31,6 +35,13 @@ router.get('/logout', logoutUser);
 router.post('/sendresetotp', sendResetOtp);
 router.post('/verifyotp', verifyOtp);
 router.post('/resetpassword', resetPassword);
+
+// CRUD of Invoices
+
+router.get('/invoice', handleAllTheInvoiceData);
+router.post('/invoice', handleCreateInvoice);
+router.put('/invoice/:id', handleUpdateInvoice);
+router.delete('/invoice/:id', handleDeleteInvoice);
 
 // 404 handler
 router.use((req, res, next) => {
