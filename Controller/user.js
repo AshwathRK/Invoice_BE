@@ -1,4 +1,4 @@
-const User = require('../Model/userregister');
+const User = require('../Model/user');
 const bcrypt = require('bcrypt');
 const { generateTokens, verifyRefreshToken } = require('../utill')
 const { v4: uuidv4 } = require('uuid');
@@ -197,7 +197,6 @@ const handlePostSignUp = async (req, res, next) => {
         });
     }
 };
-
 
 const getUserDetails = async (req, res) => {
     try {

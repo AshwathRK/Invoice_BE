@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
-const Otp = require("../Model/passwordreset");
-const User = require('../Model/userregister');
+const Otp = require("../Model/passwordUpdate");
+const User = require('../Model/user');
 require("dotenv").config();
 
 // Nodemailer setup
