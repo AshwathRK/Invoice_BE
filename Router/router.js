@@ -6,7 +6,7 @@ const {
   handlePostLogin,
   handlePostSignUp,
   getUserDetails,
-  handleUpdateUser,
+  // handleUpdateUser,
   logoutUser
 } = require('../Controller/user');
 
@@ -28,7 +28,7 @@ router.post('/', handlePostLogin);
 router.get('/signup', handleGetSignUp);
 router.post('/signup', handlePostSignUp);
 router.get('/user', verifyTokenfromCookies, getUserDetails);
-router.patch('/user', verifyTokenfromCookies, handleUpdateUser);
+// router.patch('/user', verifyTokenfromCookies, handleUpdateUser);
 router.get('/logout', logoutUser);
 
 // Password Reset routes

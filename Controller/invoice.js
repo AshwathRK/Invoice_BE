@@ -6,17 +6,40 @@ const handleAllTheInvoiceData = async (req, res) => {
         const page = parseInt(req.query.page) || 1;         // Default page = 1
         const limit = parseInt(req.query.limit) || 10;      // Default limit = 10
         const skip = (page - 1) * limit;
+        const userId = req.query.userId;                    // Extract userId from query params
+        const search = req.query.search;                    // Extract search term from query params
+
+        if (!userId) {
+            return res.status(400).json({
+                status: false,
+                message: "User ID is required"
+            });
+        }
+
+        // Create a filter object
+        const filter = { userId };
+
+        // If search term is provided, add it to the filter
+        if (search) {
+            filter.$or = [
+                { invoiceNumber: { $regex: search, $options: 'i' } }, // Search in invoiceNumber
+                // Add more fields to search in if needed
+            ];
+        }
 
         // Fetch paginated data
-        const invoices = await Invoice.find().skip(skip).limit(limit).sort({ createdAt: -1 });
+        const invoices = await Invoice.find(filter)
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
 
         // Count total documents for frontend pagination
-        const totalDocuments = await Invoice.countDocuments();
+        const totalDocuments = await Invoice.countDocuments(filter);
 
         if (invoices.length === 0) {
             return res.status(404).json({
                 status: false,
-                message: "No invoices found!"
+                message: search ? "No invoices found matching the search term!" : "No invoices found for the user!"
             });
         }
 
@@ -53,7 +76,7 @@ const handleCreateInvoice = async (req, res) => {
             clientPhone,
             dueDate,
             notes,
-            createdBy,
+            userId,
             pdfUrl
         } = req.body;
 
@@ -63,7 +86,7 @@ const handleCreateInvoice = async (req, res) => {
         // }
 
         // Required field check
-        const requiredFields = { clientName, clientAddress, invoiceNumber, invoiceDate, items };
+        const requiredFields = { clientName, clientAddress, invoiceNumber, invoiceDate, items, userId };
         for (const [key, value] of Object.entries(requiredFields)) {
             if (!value) {
                 return res.status(400).json({
@@ -101,7 +124,7 @@ const handleCreateInvoice = async (req, res) => {
             tax,
             total,
             notes,
-            createdBy,
+            userId,
             pdfUrl
         });
 

@@ -30,7 +30,7 @@ const invoiceSchema = new mongoose.Schema({
   },
 
   notes: { type: String },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 
   pdfUrl: { type: String }, // optional - path to generated/stored PDF
 
