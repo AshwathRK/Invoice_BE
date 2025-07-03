@@ -17,7 +17,7 @@ const {
 } = require('../Controller/passwordupdate');
 
 const {
-    handleAllTheInvoiceData, handleCreateInvoice, handleUpdateInvoice, handleDeleteInvoice
+    handleAllTheInvoiceData, handleGetInvoiceById, handleCreateInvoice, handleUpdateInvoice, handleDeleteInvoice
 } = require('../Controller/invoice')
 
 const {
@@ -53,6 +53,7 @@ router.post('/verifyotp', verifyOtp);
 router.post('/resetpassword', resetPassword);
 
 // CRUD of Invoices
+router.get('/invoice/:id', handleGetInvoiceById);
 router.get('/invoice', handleAllTheInvoiceData);
 router.post('/invoice', handleCreateInvoice);
 router.put('/invoice/:id', handleUpdateInvoice);
@@ -67,16 +68,16 @@ router.delete('/customer/:id', deleteCustomer);
 
 // CRUD of Items
 router.post('/item', createItem);
-router.get('/item', getAllItems);
-router.get('/item/:id', getItemById);
+router.get('/item/:userId', getAllItems);
+router.get('/items/:id', getItemById);
 router.put('/item/:id', updateItem);
-router.delete('item/:id', deleteItem);
+router.delete('/item/:id', deleteItem);
 
 // 404 handler
 router.use((req, res, next) => {
   res.status(404).json({
     status: false,
-    message: "Page not found (404)"
+    message: "Page not found (404)" 
   });
 });
 

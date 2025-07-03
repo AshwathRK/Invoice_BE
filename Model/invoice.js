@@ -9,10 +9,7 @@ const itemSchema = new mongoose.Schema({
 
 const invoiceSchema = new mongoose.Schema({
   clientName: { type: String, required: true },
-  clientAddress: { type: String, required: true },
-  clientEmail: { type: String },
-  clientPhone: { type: String },
-
+  customerId: { type: String, required: true },
   invoiceNumber: { type: String, required: true, unique: true },
   invoiceDate: { type: Date, required: true },
   dueDate: { type: Date },

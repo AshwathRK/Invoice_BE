@@ -14,7 +14,32 @@ const createItem = async (req, res) => {
 // READ ALL
 const getAllItems = async (req, res) => {
     try {
-        const items = await Item.find();
+        const userId = req.params;
+        const search = req.query.search;
+
+        let filter = userId;
+
+        if (search) {
+            const regex = new RegExp(search, 'i'); // 'i' makes the search case-insensitive
+            filter = {
+                ...filter,
+                $or: [
+                    { name: regex },
+                    { email: regex },
+                    { phone: regex },
+                    // Add more fields as needed
+                ],
+            };
+        }
+        const items = await Item.find(filter);
+
+        if (!items || items.length === 0) {
+            return res.status(404).json({
+                status: false,
+                message: "No items found!",
+            });
+        }
+
         res.status(200).json({ success: true, data: items });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

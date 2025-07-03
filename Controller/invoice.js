@@ -1,5 +1,39 @@
 const Invoice = require('../Model/invoice')
 
+const handleGetInvoiceById = async (req, res) => {
+    try {
+        const { id: invoiceId } = req.params;
+
+        if (!invoiceId) {
+            return res.status(400).json({
+                status: false,
+                message: "Invoice ID is required"
+            });
+        }
+
+        const invoice = await Invoice.findOne({ _id: invoiceId });
+
+        if (!invoice) {
+            return res.status(404).json({
+                status: false,
+                message: "Invoice not found"
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: "Invoice fetched successfully",
+            data: invoice
+        });
+    } catch (error) {
+        console.error("Error fetching invoice:", error);
+        return res.status(500).json({
+            status: false,
+            message: `Internal Server Error: ${error.message}`
+        });
+    }
+};
+
 const handleAllTheInvoiceData = async (req, res) => {
     try {
         // Extract pagination params with defaults
@@ -67,16 +101,14 @@ const handleCreateInvoice = async (req, res) => {
     try {
         const {
             clientName,
-            clientAddress,
-            invoiceNumber,
+            userId,
             invoiceDate,
+            invoiceNumber,
             items,
             tax = 0,
-            clientEmail,
-            clientPhone,
             dueDate,
             notes,
-            userId,
+            customerId,
             pdfUrl
         } = req.body;
 
@@ -86,7 +118,7 @@ const handleCreateInvoice = async (req, res) => {
         // }
 
         // Required field check
-        const requiredFields = { clientName, clientAddress, invoiceNumber, invoiceDate, items, userId };
+        const requiredFields = { clientName, userId, invoiceNumber, invoiceDate, items, customerId };
         for (const [key, value] of Object.entries(requiredFields)) {
             if (!value) {
                 return res.status(400).json({
@@ -113,9 +145,7 @@ const handleCreateInvoice = async (req, res) => {
 
         const invoice = new Invoice({
             clientName,
-            clientAddress,
-            clientEmail,
-            clientPhone,
+            customerId,
             invoiceNumber,
             invoiceDate,
             dueDate,
@@ -143,8 +173,7 @@ const handleUpdateInvoice = async (req, res) => {
         const { id } = req.params;
         const {
             clientName,
-            clientAddress,
-            invoiceNumber,
+            clientId,
             invoiceDate,
             items,
             tax = 0,
@@ -157,7 +186,7 @@ const handleUpdateInvoice = async (req, res) => {
         } = req.body;
 
         // Required field check
-        const requiredFields = { clientName, clientAddress, invoiceNumber, invoiceDate, items };
+        const requiredFields = { clientName, clientId, invoiceDate, items };
         for (const [key, value] of Object.entries(requiredFields)) {
             if (!value) {
                 return res.status(400).json({
@@ -185,9 +214,7 @@ const handleUpdateInvoice = async (req, res) => {
             id,
             {
                 clientName,
-                clientAddress,
-                clientEmail,
-                clientPhone,
+                clientId,
                 invoiceNumber,
                 invoiceDate,
                 dueDate,
@@ -236,5 +263,5 @@ const handleDeleteInvoice = async (req, res) => {
 };
 
 module.exports = {
-    handleAllTheInvoiceData, handleCreateInvoice, handleUpdateInvoice, handleDeleteInvoice
+    handleAllTheInvoiceData, handleGetInvoiceById, handleCreateInvoice, handleUpdateInvoice, handleDeleteInvoice
 };
