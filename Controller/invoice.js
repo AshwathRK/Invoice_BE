@@ -102,6 +102,9 @@ const handleCreateInvoice = async (req, res) => {
         const {
             clientName,
             userId,
+            clientEmail,
+            clientAddress,
+            clientPhone,
             invoiceDate,
             invoiceNumber,
             items,
@@ -136,7 +139,7 @@ const handleCreateInvoice = async (req, res) => {
 
         // Calculate subTotal and total
         const subTotal = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
-        const total = subTotal + ((subTotal*tax)/100);
+        const total = subTotal + ((subTotal * tax) / 100);
 
         const populatedItems = items.map(item => ({
             ...item,
@@ -146,6 +149,9 @@ const handleCreateInvoice = async (req, res) => {
         const invoice = new Invoice({
             clientName,
             customerId,
+            clientEmail,
+            clientAddress,
+            clientPhone,
             invoiceNumber,
             invoiceDate,
             dueDate,
@@ -173,20 +179,21 @@ const handleUpdateInvoice = async (req, res) => {
         const { id } = req.params;
         const {
             clientName,
-            clientId,
+            invoiceNumber,
+            customerId,
             invoiceDate,
             items,
             tax = 0,
+            clientAddress,
             clientEmail,
             clientPhone,
             dueDate,
             notes,
-            pdfUrl,
             status
         } = req.body;
 
         // Required field check
-        const requiredFields = { clientName, clientId, invoiceDate, items };
+        const requiredFields = { clientName, invoiceNumber, customerId, invoiceDate, items };
         for (const [key, value] of Object.entries(requiredFields)) {
             if (!value) {
                 return res.status(400).json({
@@ -203,7 +210,7 @@ const handleUpdateInvoice = async (req, res) => {
         }
 
         const subTotal = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
-        const total = subTotal + ((subTotal*tax)/100);
+        const total = subTotal + ((subTotal * tax) / 100);
 
         const updatedItems = items.map(item => ({
             ...item,
@@ -214,7 +221,10 @@ const handleUpdateInvoice = async (req, res) => {
             id,
             {
                 clientName,
-                clientId,
+                customerId,
+                clientAddress,
+                clientEmail,
+                clientPhone,
                 invoiceNumber,
                 invoiceDate,
                 dueDate,
@@ -223,7 +233,6 @@ const handleUpdateInvoice = async (req, res) => {
                 tax,
                 total,
                 notes,
-                pdfUrl,
                 status
             },
             { new: true, runValidators: true }

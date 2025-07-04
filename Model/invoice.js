@@ -10,6 +10,9 @@ const itemSchema = new mongoose.Schema({
 const invoiceSchema = new mongoose.Schema({
   clientName: { type: String, required: true },
   customerId: { type: String, required: true },
+  clientEmail: { type: String },
+  clientAddress: { type: String },
+  clientPhone: { type: String },
   invoiceNumber: { type: String, required: true, unique: true },
   invoiceDate: { type: Date, required: true },
   dueDate: { type: Date },
@@ -28,8 +31,6 @@ const invoiceSchema = new mongoose.Schema({
 
   notes: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-
-  pdfUrl: { type: String }, // optional - path to generated/stored PDF
 
 }, {
   timestamps: true // adds createdAt and updatedAt fields
