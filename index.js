@@ -17,7 +17,8 @@ HTTP_Server.use(cookieParser());
 
 // ✅ Enable CORS for both localhost and Netlify
 const allowedOrigins = [
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'https://app-invoicemacker.netlify.app/'
 ];
 
 const corsOptions = {
