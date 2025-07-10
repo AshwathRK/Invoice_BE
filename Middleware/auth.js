@@ -21,7 +21,6 @@ const verifyTokenfromCookies = (req, res, next) => {
         }
 
         req.user = userPayload;
-        console.log(userPayload)
         return next();
     } catch (error) {
         // Optionally clear the cookie if it's invalid
